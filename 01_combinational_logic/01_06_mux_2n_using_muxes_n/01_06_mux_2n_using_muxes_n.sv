@@ -26,6 +26,10 @@ module mux_4_1
 
   // Task:
   // Implement mux_4_1 using three instances of mux_2_1
+  logic [3:0] mux1_out, mux2_out;
 
+  mux_2_1 m1 (d0, d1, sel[0], mux1_out);
+  mux_2_1 m2 (d2, d3, sel[0], mux2_out);
+  mux_2_1 m3 (mux1_out, mux2_out, sel[1], y);
 
 endmodule

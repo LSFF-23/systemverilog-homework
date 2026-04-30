@@ -1,4 +1,4 @@
-Fork from: yuri-panchul/systemverilog-homework
+Fork from: [yuri-panchul/systemverilog-homework](https://github.com/yuri-panchul/systemverilog-homework)
 
 # A collection of SystemVerilog exercises from the beginning to the microarchitectural job interview level
 

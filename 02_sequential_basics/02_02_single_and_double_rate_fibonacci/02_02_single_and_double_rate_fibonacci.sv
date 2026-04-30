@@ -34,5 +34,17 @@ module fibonacci_2
   // Task:
   // Implement a module that generates two fibonacci numbers per cycle
 
+  wire [15:0] next1 = num + num2;
+  wire [15:0] next2 = num2 + next1;
+
+  always_ff @(posedge clk)
+    if (rst) begin
+      num <= 'b1;
+      num2 <= 'b1;
+    end else begin
+      num <= next1;
+      num2 <= next2;
+    end
+
 
 endmodule

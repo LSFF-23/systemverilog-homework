@@ -58,5 +58,19 @@ module serial_comparator_most_significant_first
   //
   // See the testbench for the output format ($display task).
 
+  logic a_eq_b_prev, a_gt_b_prev;
+
+  assign a_eq_b = (a == b) && a_eq_b_prev;
+  assign a_greater_b = (a_eq_b_prev && a && !b) || a_gt_b_prev;
+  assign a_less_b = !a_eq_b && !a_greater_b;
+
+  always_ff @(posedge clk)
+    if (rst) begin
+        a_eq_b_prev <= '1;
+        a_gt_b_prev <= '0;
+    end else begin
+        a_eq_b_prev <= a_eq_b;
+        a_gt_b_prev <= a_greater_b;
+    end
 
 endmodule

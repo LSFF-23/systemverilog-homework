@@ -53,4 +53,9 @@ module signed_or_unsigned_mul
   output [2 * n - 1:0] res
 );
 
+wire signed [2 * n - 1:0] s_mul = $signed(a) * $signed(b);
+wire [2 * n - 1:0] u_mul = a * b;
+
+assign res = (signed_mul) ? s_mul : u_mul;
+
 endmodule

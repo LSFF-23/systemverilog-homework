@@ -35,6 +35,8 @@ module signed_add_with_saturation
   // When the result does not fit into 4 bits,
   // and the arguments are negative,
   // the sum should be set to the minimum negative number.
-
+  wire [3:0] fsum = a + b;
+  wire overflow = (fsum[3] != a[3]) && (fsum[3] != b[3]);
+  assign sum = (overflow) ? {a[3], {3{!a[3]}}}: fsum;
 
 endmodule

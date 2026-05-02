@@ -42,7 +42,7 @@ module parallel_to_serial
             serial_valid <= '0;
             serial_data <= '0;
         end else if (parallel_valid) begin
-            bit_counter <= 'b1;
+            bit_counter <= 1'b1;
             sent <= '0;
             serial_valid <= '1;
             serial_data <= parallel_data[0];

@@ -39,8 +39,8 @@ module fibonacci_2
 
   always_ff @(posedge clk)
     if (rst) begin
-      num <= 'b1;
-      num2 <= 'b1;
+      num <= 16'b1;
+      num2 <= 16'b1;
     end else begin
       num <= next1;
       num2 <= next2;

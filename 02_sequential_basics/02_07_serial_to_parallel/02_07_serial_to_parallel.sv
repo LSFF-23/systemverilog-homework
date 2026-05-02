@@ -27,5 +27,18 @@ module serial_to_parallel
     // Note:
     // Check the waveform diagram in the README for better understanding.
 
+    localparam csize = $clog2(width);
+    logic [csize - 1:0] bit_counter;
+
+    always_ff @(posedge clk)
+        if (rst) begin
+            parallel_data <= '0;
+            parallel_valid <= '0;
+            bit_counter <= '0;
+        end else if (serial_valid) begin
+            parallel_data[bit_counter] <= serial_data;
+            {parallel_valid, bit_counter} <= bit_counter + 1'b1;
+        end else
+            parallel_valid <= '0;
 
 endmodule

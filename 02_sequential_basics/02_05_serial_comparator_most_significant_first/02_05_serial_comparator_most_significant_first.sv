@@ -66,8 +66,8 @@ module serial_comparator_most_significant_first
 
   always_ff @(posedge clk)
     if (rst) begin
-        a_eq_b_prev <= '1;
-        a_gt_b_prev <= '0;
+        a_eq_b_prev <= 1'b1;
+        a_gt_b_prev <= 1'b0;
     end else begin
         a_eq_b_prev <= a_eq_b;
         a_gt_b_prev <= a_greater_b;

@@ -29,5 +29,30 @@ module parallel_to_serial
     // Note:
     // Check the waveform diagram in the README for better understanding.
 
+    localparam csize = $clog2(width);
+    logic [csize - 1:0] bit_counter;
+    logic sent;
+
+    assign busy = serial_valid && !sent;
+
+    always_ff @(posedge clk)
+        if (rst) begin
+            bit_counter <= '0;
+            sent <= '0;
+            serial_valid <= '0;
+            serial_data <= '0;
+        end else if (parallel_valid) begin
+            bit_counter <= 'b1;
+            sent <= '0;
+            serial_valid <= '1;
+            serial_data <= parallel_data[0];
+        end else if (serial_valid && !sent) begin
+            serial_data <= parallel_data[bit_counter];
+            {sent, bit_counter} <= bit_counter + 1'b1;
+        end else begin
+            serial_valid <= '0;
+            sent <= '0;
+        end
+
 
 endmodule

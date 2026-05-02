@@ -35,9 +35,9 @@ module serial_adder_with_vld
 
   always_ff @(posedge clk)
     if (rst) begin
-      carry <= '0;
+      carry <= 1'b0;
     end else if (vld && last) begin
-      carry <= '0;
+      carry <= 1'b0;
     end else if (vld) begin
       carry <= carry_comb;
     end

@@ -36,8 +36,8 @@ module one_cycle_pulse_detector (input clk, rst, a, output detected);
 
   always_ff @(posedge clk) begin
     if (rst) begin
-      a_sync1 <= '0;
-      a_sync2 <= '0;
+      a_sync1 <= 1'b0;
+      a_sync2 <= 1'b0;
     end else begin
       a_sync1 <= a;
       a_sync2 <= a_sync1;

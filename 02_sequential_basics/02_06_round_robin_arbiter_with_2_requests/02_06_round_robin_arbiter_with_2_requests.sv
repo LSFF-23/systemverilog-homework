@@ -23,5 +23,15 @@ module round_robin_arbiter_with_2_requests
     // requests -> 01 00 10 11 11 00 11 00 11 11
     // grants   -> 01 00 10 01 10 00 01 00 10 01
 
+    logic round;
+    wire [1:0] mr_grant = {round, !round};
+
+    always_ff @(posedge clk)
+        if (rst)
+            round <= 1'b0;
+        else if (requests[round])
+            round <= !round;
+
+    assign grants = (requests == 2'b11) ? mr_grant : requests;
 
 endmodule

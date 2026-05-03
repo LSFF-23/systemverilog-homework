@@ -85,6 +85,30 @@ module sort_three_floats (
     //
     // The FLEN parameter is defined in the "import/preprocessed/cvw/config-shared.vh" file
     // and usually equal to the bit width of the double-precision floating-point number, FP64, 64 bits.
+    
+    wire [FLEN - 1:0] a = unsorted[0];
+    wire [FLEN - 1:0] b = unsorted[1];
+    wire [FLEN - 1:0] c = unsorted[2];
+    wire a_gt_b, a_gt_c, b_gt_c;
+    wire [2:0] err_signal;
+
+    assign err = |err_signal;
+
+    f_less_or_equal floe1 (.a(a), .b(b), .res(a_gt_b), .err(err_signal[0]));
+    f_less_or_equal floe2 (.a(a), .b(c), .res(a_gt_c), .err(err_signal[1]));
+    f_less_or_equal floe3 (.a(b), .b(c), .res(b_gt_c), .err(err_signal[2]));
+
+    always_comb
+        case ({a_gt_b, a_gt_c, b_gt_c})
+            3'b000: sorted = {c, b, a}; // a <= b, a <= c, b <= c
+            3'b001: sorted = {b, c, a}; // a <= b, a <= c, b > c
+            3'b010: sorted = {b, a, c}; // a <= b, a > c, b <= c
+            3'b011: sorted = {b, a, c}; // a <= b, a > c, b > c
+            3'b100: sorted = {c, a, b}; // a > b, a <= c, b <= c
+            3'b101: sorted = {a, b, c}; // a > b, a <= c, b > c (impossible)
+            3'b110: sorted = {a, c, b}; // a > b, a > c, b <= c
+            3'b111: sorted = {a, b, c}; // a > b, a > c, b > c
+        endcase
 
 
 endmodule

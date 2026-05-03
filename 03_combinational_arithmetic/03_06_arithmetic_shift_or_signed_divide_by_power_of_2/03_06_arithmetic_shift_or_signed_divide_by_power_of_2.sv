@@ -15,6 +15,12 @@ endmodule
 // Task
 //----------------------------------------------------------------------------
 
+/*
+Notes:
+S first bits equal sign bit (N - 1 bit)
+Indexes [(N - 1) - S] to 0 will receive input's indexes (N - 1) to S
+*/
+
 module arithmetic_right_shift_of_N_by_S_using_concatenation
 # (parameter N = 8, S = 3)
 (input  [N - 1:0] a, output [N - 1:0] res);
@@ -26,6 +32,7 @@ module arithmetic_right_shift_of_N_by_S_using_concatenation
   // concatenations ({a, b}), bit repetitions ({ a { b }}), bit slices
   // and constant expressions.
 
+  assign res = {{S{a[N - 1]}}, a[N - 1:S]};
 
 endmodule
 
@@ -40,6 +47,12 @@ module arithmetic_right_shift_of_N_by_S_using_for_inside_always
   // You are allowed to use only "always_comb" with a "for" loop
   // that iterates through the individual bits of the input.
 
+  always_comb
+    for (int i = 0; i < N; i++)
+      if (i > N - 1 - S)
+        res[i] = a[N - 1];
+      else
+        res[i] = a[i + S];
 
 endmodule
 
@@ -51,5 +64,14 @@ module arithmetic_right_shift_of_N_by_S_using_for_inside_generate
   // Implement a module that arithmetically shifts input exactly
   // by `S` bits to the right using "generate" and "for"
 
+  genvar i;
+  generate
+    for (i = 0; i < N; i++) begin: ars_NxS
+      if (i > N - 1 - S)
+        assign res[i] = a[N - 1];
+      else
+        assign res[i] = a[i + S];
+    end
+  endgenerate
 
 endmodule

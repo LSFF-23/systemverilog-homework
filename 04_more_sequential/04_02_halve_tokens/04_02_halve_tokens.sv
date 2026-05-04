@@ -19,5 +19,14 @@ module halve_tokens
     // a -> 110_011_101_000_1111
     // b -> 010_001_001_000_0101
 
+    logic token;
+
+    always_ff @(posedge clk)
+        if (rst)
+            token <= '0;
+        else if (a)
+            token <= !token;
+
+    assign b = a ? token : 1'b0;
 
 endmodule

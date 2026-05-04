@@ -25,5 +25,25 @@ module double_tokens
     // a -> 10010011000110100001100100
     // b -> 11011011110111111001111110
 
+    logic [7:0] debt;
+    logic out_token;
+
+    always_ff @(posedge clk)
+        if (rst) begin
+            debt <= '0;
+            overflow <= '0;
+            out_token <= '0;
+        end else if (a) begin
+            debt <= debt + 1'b1;
+            if (debt == 8'd200)
+                overflow <= 1'b1;
+            out_token <= 1'b1;
+        end else if (!a && debt > 8'd0) begin
+            debt <= debt - 1'b1;
+            out_token <= 1'b1;
+        end else
+            out_token <= 1'b0;
+
+    assign b = out_token;
 
 endmodule

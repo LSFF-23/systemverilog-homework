@@ -75,5 +75,80 @@ module serial_divisibility_by_5_using_fsm
   // Hint 2: As we are interested only in the remainder, all operations are performed under the modulo 5 (% 5).
   // Check manually how the remainder changes under such modulo.
 
+  logic [1:0] turn, remainder;
+
+  // turn (x) | remainder l[x]: l = [(2**x) % 5 for x in range(8)] = [1, 2, 4, 3, 1, 2, 4, 3]
+  // next_state logic: a = r (mod 5) and b = s (mod 5) -> a + b = r + s (mod 5)
+  always_comb
+    case (turn)
+      2'b00: remainder = 2'b00;
+      2'b01: remainder = 2'b01;
+      2'b10: remainder = 2'b11;
+      2'b11: remainder = 2'b10;
+    endcase
+
+  always_ff @(posedge clk)
+    if (rst)
+      turn <= '0;
+    else
+      turn <= turn + 1'b1;
+
+  enum logic [2:0] {
+    mod0 = 3'b000,
+    mod1 = 3'b001,
+    mod2 = 3'b010,
+    mod3 = 3'b011,
+    mod4 = 3'b100
+  } state, next_state;
+
+  always_ff @(posedge clk)
+    if (rst)
+      state = mod0;
+    else
+      state = next_state;
+
+  always_comb begin
+    next_state = state;
+    if (new_bit)
+      case (state)
+        mod0:
+          case(remainder)
+            2'b00: next_state = mod1;
+            2'b01: next_state = mod2;
+            2'b10: next_state = mod3;
+            2'b11: next_state = mod4;
+          endcase
+        mod1:
+          case(remainder)
+            2'b00: next_state = mod2;
+            2'b01: next_state = mod3;
+            2'b10: next_state = mod4;
+            2'b11: next_state = mod0;
+          endcase
+        mod2:
+          case(remainder)
+            2'b00: next_state = mod3;
+            2'b01: next_state = mod4;
+            2'b10: next_state = mod0;
+            2'b11: next_state = mod1;
+          endcase
+        mod3:
+          case(remainder)
+            2'b00: next_state = mod4;
+            2'b01: next_state = mod0;
+            2'b10: next_state = mod1;
+            2'b11: next_state = mod2;
+          endcase
+        mod4:
+          case(remainder)
+            2'b00: next_state = mod0;
+            2'b01: next_state = mod1;
+            2'b10: next_state = mod2;
+            2'b11: next_state = mod3;
+          endcase
+      endcase
+  end
+
+  assign div_by_5 = state == mod0;
 
 endmodule

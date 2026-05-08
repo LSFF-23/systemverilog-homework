@@ -71,5 +71,29 @@ module serial_comparator_most_significant_first_using_fsm
   // but use the Finite State Machine to evaluate the result.
   // Most significant bits arrive first.
 
+  enum logic [2:0] {
+    LT = 3'b100,
+    EQ = 3'b010,
+    GT = 3'b001
+  } state, next_state;
+
+  always_ff @(posedge clk)
+    if (rst)
+      state <= EQ;
+    else
+      state <= next_state;
+
+  always_comb begin
+    next_state = state;
+    case (state)
+      EQ:
+        if (a && !b)
+          next_state = GT;
+        else if (!a && b)
+          next_state = LT;
+    endcase
+  end
+
+  assign {a_less_b, a_eq_b, a_greater_b} = next_state; 
 
 endmodule
